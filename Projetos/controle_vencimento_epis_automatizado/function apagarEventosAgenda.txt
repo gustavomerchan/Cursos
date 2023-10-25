@@ -1,0 +1,13 @@
+function apagarEventosAgenda() {
+  var agendaId = "38b12949f185239b78e2a2dcb654d4d674d036ee055f00583c12e550deb6a179@group.calendar.google.com"; // Substitua pelo ID da agenda que você quer limpar
+
+  var dataInicial = new Date("2019-01-01T00:00:00"); // Data inicial: 1º de dezembro de 2023, 00:00:00
+  var dataFinal = new Date("2024-12-31T23:59:59"); // Data final: 31 de dezembro de 2024, 23:59:59
+
+  var agenda = CalendarApp.getCalendarById(agendaId);
+  var eventos = agenda.getEvents(dataInicial, dataFinal);
+
+  for (var i = 0; i < eventos.length; i++) {
+    eventos[i].deleteEvent();
+  }
+}

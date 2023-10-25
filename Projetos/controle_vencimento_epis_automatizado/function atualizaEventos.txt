@@ -1,0 +1,55 @@
+function atualizaEventos() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = sheet.getDataRange().getValues();
+  var calendarId = "38b12949f185239b78e2a2dcb654d4d674d036ee055f00583c12e550deb6a179@group.calendar.google.com"; // substituir com o ID da agenda
+  var calendar = CalendarApp.getCalendarById(calendarId);
+
+  var eventosAtualizados = [];
+
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][5] === "") continue; // pular linhas em branco na coluna 5
+    var eventDate = data[i][5];
+    var eventName = data[i][0];
+    var eventDescription = data[i][3];
+    var eventStartTime = new Date(eventDate).setHours(8, 0, 0, 0); // definir hora do evento como 8:00 AM
+    var eventEndTime = new Date(eventDate).setHours(9, 0, 0, 0); // definir hora do evento como 9:00 AM
+    var eventId = data[i][6]; // coluna onde será armazenado o ID do evento
+
+    // verificar se o evento já existe para evitar duplicatas
+    var eventExists = false;
+    var existingEvent = null;
+    var events = calendar.getEventsForDay(new Date(eventDate));
+    for (var j = 0; j < events.length; j++) {
+      if (events[j].getTitle() === eventName && events[j].getDescription() === eventDescription) {
+        eventExists = true;
+        existingEvent = events[j];
+        break;
+      }
+    }
+
+    // atualizar evento existente com a nova data de vencimento
+    if (eventExists) {
+      existingEvent.setTime(new Date(eventStartTime), new Date(eventEndTime));
+      eventosAtualizados.push(existingEvent.getId()); // adicionar o ID do evento atualizado à lista de eventos atualizados
+    } else {
+      // criar evento se não existir
+      var newEvent = calendar.createEvent(eventName, new Date(eventStartTime), new Date(eventEndTime), { description: eventDescription });
+      sheet.getRange(i + 1, 7).setValue(newEvent.getId()); // atualizar a planilha com o ID do novo evento
+      eventosAtualizados.push(newEvent.getId()); // adicionar o ID do evento criado à lista de eventos atualizados
+    }
+  }
+
+  // excluir eventos antigos que não foram atualizados
+  var eventosAntigos = data.map(function (row) {
+    return row[6]; // obter todos os IDs dos eventos antigos da coluna 7 da planilha
+  });
+
+  eventosAntigos.forEach(function (eventId) {
+    if (eventId !== "" && eventosAtualizados.indexOf(eventId) === -1) {
+      var eventToDelete = calendar.getEventById(eventId);
+      if (eventToDelete) {
+        eventToDelete.deleteEvent();
+      }
+    }
+  });
+}

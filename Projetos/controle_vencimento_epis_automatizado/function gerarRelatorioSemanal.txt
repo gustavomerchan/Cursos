@@ -1,0 +1,34 @@
+function gerarRelatorioSemanal() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = sheet.getDataRange().getValues();
+  var hoje = new Date();
+  var primeiroDiaSemana = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate() - hoje.getDay()); // Alteração aqui
+  var ultimoDiaSemana = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate() + (6 - hoje.getDay())); // Alteração aqui
+
+  var html = "<html><head><style>" +
+             "table { width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; }" +
+             "th { background-color: #f2f2f2; font-weight: bold; text-align: center; padding: 8px; }" +
+             "td { border: 1px solid #dddddd; text-align: left; padding: 8px; }" +
+             "tr:nth-child(even) { background-color: #f2f2f2; }" +
+             "tr:hover { background-color: #f5f5f5; }" +
+             "</style></head><body><table><tr><th>Data</th><th>Nome</th><th>EPI</th></tr>";
+
+ for (var i = 1; i < data.length; i++) {
+    var dataVencimento = new Date(data[i][5]);
+    if (dataVencimento >= primeiroDiaSemana && dataVencimento <= ultimoDiaSemana) {
+      var nomeColaborador = data[i][0];
+      var epi = data[i][3];
+
+      html += "<tr><td>" + dataVencimento.toLocaleDateString("pt-BR") + "</td><td>" + nomeColaborador + "</td><td>" + epi + "</td></tr>";
+    }
+  }
+  html += "</table></body></html>";
+
+  MailApp.sendEmail({
+    to: 'suporte.comercial@wtavet.com.br,inovacao@wtavet.com.br,administrativo@wtavet.com.br,administrativo1@wtavet.com.br,negocios@wtavet.com.br,qualidade@wtavet.com.br,qualidade01@wtavet.com.br,processos@wtavet.com.br',
+    subject: 'Grupo WTA: Relatório Semanal de Vencimento de EPIS ' + hoje,
+    htmlBody: html
+  });
+}
+
+
