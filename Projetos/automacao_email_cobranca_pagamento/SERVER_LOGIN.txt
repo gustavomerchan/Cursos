@@ -1,0 +1,6 @@
+server = 'db1.windows.net'
+database = 'CORPORATIVO_PRODUCAO'
+username = 'sa'
+password = 'wT@b3nNeR21'
+driver = '{ODBC Driver 17 for SQL Server}'
+query = 'SELECT nome, email, data_de_vencimento FROM tabela_de_vencimentos'
