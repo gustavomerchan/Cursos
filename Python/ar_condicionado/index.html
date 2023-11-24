@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Formulário de Consumo de Energia</title>
+</head>
+<body>
+
+    <h1>Consumo de Energia do Ar condicionado</h1>
+
+    <form action="#" method="post" id="consumoForm">
+        <label for="consumo">Consumo do Aparelho (kWh/mês):</label>
+        <input type="text" id="consumo" name="consumo" required>
+
+        <label for="horasPorDia">Horas Ligado por Dia:</label>
+        <input type="text" id="horasPorDia" name="horasPorDia" required>
+
+        <label for="diasDeUso">Dias de Uso no Mês:</label>
+        <input type="text" id="diasDeUso" name="diasDeUso" required>
+
+        <label for="precoDaEnergia">Preço da energia:</label>
+        <input type="text" id="precoDaEnergia" name="precoDaEnergia" required>
+        <button type="submit" id="botao-calcular" name="botao-calcular">Calcular 
+
+        </button>
+ 
+    </form> 
+    <div id="resultado">
+        <article>
+            <strong>Seu gasto será:</strong>
+            <p>
+                <bold id="gasto">-</bold>
+                reais
+            </p>
+        
+        </article>
+        <p id = "Obs" ><strong>Obs:</strong> O Cálculo nao leva em consideração os impostos.</p>
+    </div>
+    <script src="ar_condiconado.js"></script>
+</body>
